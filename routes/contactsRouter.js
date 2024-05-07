@@ -1,3 +1,5 @@
+import { isEmptyBody } from "../middlewares/isEmptyBody.js";
+
 import express from "express";
 import {
   getAllContacts,
@@ -15,8 +17,8 @@ contactsRouter.get("/:id", getOneContact);
 
 contactsRouter.delete("/:id", deleteContact);
 
-contactsRouter.post("/", createContact);
+contactsRouter.post("/", isEmptyBody, createContact);
 
-contactsRouter.put("/:id", updateContact);
+contactsRouter.put("/:id", isEmptyBody, updateContact);
 
 export default contactsRouter;
