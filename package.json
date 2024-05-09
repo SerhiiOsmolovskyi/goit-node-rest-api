@@ -4,15 +4,18 @@
   "scripts": {
     "start": "node ./app.js",
     "dev": "nodemon ./app.js"
+    
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "express": "^4.19.2",
     "joi": "^17.11.0",
     "morgan": "^1.10.0",
     "nanoid": "^5.0.7"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2"
+    "nodemon": "^3.1.0"
   }
+  
 }

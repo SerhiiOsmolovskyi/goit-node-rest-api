@@ -54,35 +54,15 @@
     "phone": "(748) 206-2688"
   },
   {
-    "id": "KM74g1CHT5y4hO6YPw93l",
-    "name": {
-      "name": "John Doe",
-      "email": "john@example.com",
-      "phone": "123-456-7890"
-    }
-  },
-  {
-    "id": "nur6c2dYAHux4l66jeU-N",
-    "name": {
-      "name": "serhio",
-      "email": "serhio@gmail.com",
-      "phone": "4313343180"
-    }
-  },
-  {
-    "id": "-f444jhWMLMTleDC13TL0",
-    "name": {
-      "name": "Ozzy",
-      "email": "john.doe@example.com",
-      "phone": "123-456-7890"
-    }
-  },
-  {
     "id": "DqZpx4XVB1RRnA0hvyeXW",
-    "name": {
-      "name": "Maks",
-      "email": "john.doe@example.com",
-      "phone": "123-456-7890"
-    }
+    "name": "Maksim Perepelytsya",
+    "email": "john.doe@example.com",
+    "phone": "123-456-7890"
+  },
+  {
+    "id": "X4DD20nK1XJ2Eat3caIXo",
+    "name": "Fake Accaunt",
+    "email": "john.doe@example.com",
+    "phone": "123-456-7890"
   }
 ]
