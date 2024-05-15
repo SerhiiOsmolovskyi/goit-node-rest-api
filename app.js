@@ -23,9 +23,6 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-// const DB_HOST =
-//   "mongodb+srv://Osmolovskyi:Aeb_137894@cluster0.on0w9zy.mongodb.net/db-contacts?retryWrites=true&w=majority&appName=Cluster0";
-
 mongoose
   .connect(DB_HOST)
   .then(() => {
