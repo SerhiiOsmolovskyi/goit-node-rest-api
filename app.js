@@ -4,7 +4,9 @@ import cors from "cors";
 import mongoose from "mongoose";
 
 import contactsRouter from "./routes/contactsRouter.js";
-import { DB_HOST } from "./config.js";
+// import { DB_HOST } from "./config.js";
+
+// console.log(process.env);
 
 const app = express();
 
@@ -24,7 +26,7 @@ app.use((err, req, res, next) => {
 });
 
 mongoose
-  .connect(DB_HOST)
+  .connect(process.env.DB_HOST)
   .then(() => {
     app.listen(3000, () => {
       console.log("Server is running. Use our API on port: 3000");
