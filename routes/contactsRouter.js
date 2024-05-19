@@ -1,7 +1,14 @@
 import { isEmptyBody } from "../middlewares/isEmptyBody.js";
 import { validateContactId } from "../middlewares/validateContactId.js";
-
+import validateBody from "../decorators/validateBody.js";
 import express from "express";
+
+import {
+  createContactSchema,
+  updateContactSchema,
+  updateStatusContactSchema,
+} from "../schemas/contactsSchemas.js";
+
 import {
   getAllContacts,
   getOneContact,
@@ -19,14 +26,26 @@ contactsRouter.get("/:id", validateContactId, getOneContact);
 
 contactsRouter.delete("/:id", validateContactId, deleteContact);
 
-contactsRouter.post("/", isEmptyBody, createContact);
+contactsRouter.post(
+  "/",
+  isEmptyBody,
+  validateBody(createContactSchema),
+  createContact
+);
 
-contactsRouter.put("/:id", validateContactId, isEmptyBody, updateContact);
+contactsRouter.put(
+  "/:id",
+  validateContactId,
+  isEmptyBody,
+  validateBody(updateContactSchema),
+  updateContact
+);
 
 contactsRouter.patch(
   "/:id",
   validateContactId,
   isEmptyBody,
+  validateBody(updateStatusContactSchema),
   updateStatusContact
 );
 
