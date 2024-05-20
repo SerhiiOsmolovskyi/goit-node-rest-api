@@ -2,6 +2,7 @@ import { isEmptyBody } from "../middlewares/isEmptyBody.js";
 import { validateContactId } from "../middlewares/validateContactId.js";
 import validateBody from "../decorators/validateBody.js";
 import express from "express";
+import authenticate from "../middlewares/authenticate.js";
 
 import {
   createContactSchema,
@@ -20,6 +21,8 @@ import {
 
 const contactsRouter = express.Router();
 
+contactsRouter.use(authenticate);
+
 contactsRouter.get("/", getAllContacts);
 
 contactsRouter.get("/:id", validateContactId, getOneContact);
@@ -36,7 +39,7 @@ contactsRouter.post(
 contactsRouter.put("/:id", validateContactId, isEmptyBody, updateContact);
 
 contactsRouter.patch(
-  "/:id",
+  "/:id/favorite",
   validateContactId,
   isEmptyBody,
   validateBody(updateContactSchema),
