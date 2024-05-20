@@ -42,7 +42,7 @@ contactsRouter.put(
 );
 
 contactsRouter.patch(
-  "/:id",
+  "/:id/favorite",
   validateContactId,
   isEmptyBody,
   validateBody(updateStatusContactSchema),
