@@ -33,7 +33,9 @@ contactsRouter.post(
   createContact
 );
 
-contactsRouter.put(
+contactsRouter.put("/:id", validateContactId, isEmptyBody, updateContact);
+
+contactsRouter.patch(
   "/:id",
   validateContactId,
   isEmptyBody,
