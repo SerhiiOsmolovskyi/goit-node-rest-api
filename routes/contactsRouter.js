@@ -24,7 +24,7 @@ contactsRouter.post("/", isEmptyBody, createContact);
 contactsRouter.put("/:id", validateContactId, isEmptyBody, updateContact);
 
 contactsRouter.patch(
-  "/:id",
+  "/:id/favorite",
   validateContactId,
   isEmptyBody,
   updateStatusContact
