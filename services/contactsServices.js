@@ -1,31 +1,23 @@
 import Contact from "../models/Contact.js";
 
+export const countContacts = (filter) => Contact.countDocuments(filter);
+
 export const listContacts = (search = {}) => {
-  const { filter = {} } = search;
-  return Contact.find(filter);
-};
-export const getContactById = async (_id) => {
-  const result = await Contact.findById(_id);
-  return result;
+  const { filter = {}, fields = "", settings = "" } = search;
+  return Contact.find(filter, fields, settings).populate("owner");
 };
 
-export const updateContactById = async (id, newData) => {
-  const updatedContact = await Contact.findByIdAndUpdate(id, newData, {
-    new: true,
-  });
-  return updatedContact;
-};
+export const getContact = (filter) => Contact.findOne(filter);
 
-export const removeContact = (id) => Contact.findByIdAndDelete(id);
+export const updateContact = (filter, newData) =>
+  Contact.findOneAndUpdate(filter, newData, { new: true });
 
-export const addContact = ({ name, email, phone }) =>
-  Contact.create({ name, email, phone });
+export const removeContact = (filter) => Contact.findOneAndDelete(filter);
 
-export const updateStatusContact = async (id, { favorite }) => {
-  const result = await Contact.findByIdAndUpdate(
-    id,
-    { favorite },
-    { new: true }
-  );
+export const addContact = ({ name, email, phone, owner }) =>
+  Contact.create({ name, email, phone, owner });
+
+export const updateStatusContact = (filter, { favorite }) => {
+  const result = Contact.findOneAndUpdate(filter, { favorite }, { new: true });
   return result;
 };

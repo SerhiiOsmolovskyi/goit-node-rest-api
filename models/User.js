@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-import { emailRegexp } from "../constants/authConstants.js"; // Виправлений шлях
-import { handleSaveError, setUpdateSettings } from "./hooks.js"; // Виправлений шлях
+import { emailRegexp } from "../constants/authConstants.js";
+import { handleSaveError, setUpdateSettings } from "./hooks.js";
 
 const userSchema = new Schema(
   {
