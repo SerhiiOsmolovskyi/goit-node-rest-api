@@ -1,53 +1,23 @@
-import fs from "fs/promises";
-import { nanoid } from "nanoid";
-import path from "path";
+import Contact from "../models/Contact.js";
 
-const contactsPath = path.resolve("db", "contacts.json");
+export const countContacts = (filter) => Contact.countDocuments(filter);
 
-const updateContacts = (contacts) =>
-  fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-
-export const listContacts = async () => {
-  const data = await fs.readFile(contactsPath, "utf-8");
-  return JSON.parse(data);
+export const listContacts = (search = {}) => {
+  const { filter = {}, fields = "", settings = "" } = search;
+  return Contact.find(filter, fields, settings).populate("owner");
 };
 
-export const getContactById = async (contactId) => {
-  const contacts = await listContacts();
-  return contacts.find((contact) => contact.id === contactId) || null;
-};
+export const getContact = (filter) => Contact.findOne(filter);
 
-export const updateContactById = async (id, data) => {
-  const contacts = await listContacts();
-  const index = contacts.findIndex((contact) => contact.id === id);
-  if (index === -1) {
-    return null;
-  }
-  contacts[index] = { ...contacts[index], ...data };
-  await updateContacts(contacts);
-  return contacts[index];
-};
+export const updateContact = (filter, newData) =>
+  Contact.findOneAndUpdate(filter, newData, { new: true });
 
-export const removeContact = async (contactId) => {
-  const contacts = await listContacts();
-  const index = contacts.findIndex((contact) => contact.id === contactId);
-  if (index !== -1) {
-    const removedContact = contacts.splice(index, 1)[0];
-    await updateContacts(contacts);
-    return removedContact;
-  }
-  return null;
-};
+export const removeContact = (filter) => Contact.findOneAndDelete(filter);
 
-export const addContact = async ({ name, email, phone }) => {
-  const contacts = await listContacts();
-  const newContact = {
-    id: nanoid(),
-    name,
-    email,
-    phone,
-  };
-  contacts.push(newContact);
-  await updateContacts(contacts);
-  return newContact;
+export const addContact = ({ name, email, phone, owner }) =>
+  Contact.create({ name, email, phone, owner });
+
+export const updateStatusContact = (filter, { favorite }) => {
+  const result = Contact.findOneAndUpdate(filter, { favorite }, { new: true });
+  return result;
 };
