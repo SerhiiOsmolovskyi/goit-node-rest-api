@@ -4,22 +4,46 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import compareHash from "../helpers/compareHash.js";
 import { createToken } from "../helpers/jwt.js";
 import { subscriptions } from "../constants/authConstants.js";
+import fs from "fs/promises";
+import path from "path";
+import gravatar from "gravatar";
+
+const avatarsPath = path.resolve("public", "avatars");
 
 const signup = async (req, res) => {
   const { email } = req.body;
+  // const { path: oldPath, filename } = req.file;
+  // const newPath = path.join(avatarsPath, filename);
+  // await fs.rename(oldPath, newPath);
+  // const avatarURL = path.join("avatars", filename);
+  const avatarURL = gravatar.url(email, { s: "250", r: "pg", d: "mm" });
   const user = await authServices.findUser({ email });
   if (user) {
     throw HttpError(409, "Email already exists");
   }
 
-  const newUser = await authServices.saveUser(req.body);
+  const newUser = await authServices.saveUser({ ...req.body, avatarURL });
 
   res.status(201).json({
     user: {
       email: newUser.email,
       subscription: newUser.subscription,
+      avatarURL: newUser.avatarURL,
     },
   });
+};
+
+const updateAvatar = async (req, res) => {
+  const userId = req.user.id;
+  const { path: oldPath, filename } = req.file;
+  const newPath = path.join(avatarsPath, filename);
+  await fs.rename(oldPath, newPath);
+  await authServices.processAvatar(newPath, filename);
+  const avatarURL = path.join("avatars", filename);
+
+  await authServices.updateUser({ _id: userId }, { avatarURL });
+
+  res.status(200).json({ avatarURL });
 };
 
 const signin = async (req, res) => {
@@ -97,4 +121,5 @@ export default {
   getCurrent: ctrlWrapper(getCurrent),
   signout: ctrlWrapper(signout),
   updateSubscription: ctrlWrapper(updateSubscription),
+  updateAvatar: ctrlWrapper(updateAvatar),
 };

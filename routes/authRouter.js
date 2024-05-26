@@ -5,10 +5,12 @@ import validateBody from "../decorators/validateBody.js";
 import { authSignupSchema, authSigninSchema } from "../schemas/authSchema.js";
 import authenticate from "../middlewares/authenticate.js";
 import { updateSubscriptionSchema } from "../schemas/authSchema.js";
+import upload from "../middlewares/upload.js";
 const authRouter = express.Router();
 
 authRouter.post(
   "/register",
+  upload.single("avatar"),
   isEmptyBody,
   validateBody(authSignupSchema),
   authControllers.signup
@@ -27,6 +29,13 @@ authRouter.patch(
   isEmptyBody,
   validateBody(updateSubscriptionSchema),
   authControllers.updateSubscription
+);
+
+authRouter.patch(
+  "/avatars",
+  upload.single("avatarURL"),
+  authenticate,
+  authControllers.updateAvatar
 );
 
 authRouter.get("/current", authenticate, authControllers.getCurrent);
