@@ -6,7 +6,7 @@ export const getAllContacts = async (req, res) => {
   const { _id: owner } = req.user;
   const filter = { owner };
   const fields = "-createdAt -updatedAt";
-  const { page = 1, limit = 20 } = req.query;
+  const { favorite, page = 1, limit = 20 } = req.query;
   const skip = (page - 1) * limit;
   const settings = { skip, limit };
 

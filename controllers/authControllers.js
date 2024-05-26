@@ -48,20 +48,20 @@ const signin = async (req, res) => {
 };
 
 const getCurrent = (req, res) => {
-  const { username, email } = req.user;
+  const { username, email, subscription } = req.user;
   res.json({
     username,
     email,
+    subscription,
   });
 };
 
 const signout = async (req, res) => {
-  const { id } = req.user;
-  await authServices.updateUser({ id }, { token: "" });
+  const { _id: userId } = req.user;
 
-  res.json({
-    message: "You were signout successfully",
-  });
+  await authServices.updateUser({ _id: userId }, { token: "" });
+
+  res.status(204).send();
 };
 
 const updateSubscription = async (req, res) => {
