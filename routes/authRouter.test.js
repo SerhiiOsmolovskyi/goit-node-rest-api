@@ -43,39 +43,39 @@ describe("test /api/users/register", () => {
   });
 });
 
-// describe("test /api/users/login", () => {
-//   let server = null;
-//   beforeAll(async () => {
-//     await mongoose.connect(DB_TEST_HOST);
-//     server = app.listen(PORT);
-//   });
+describe("test /api/users/login", () => {
+  let server = null;
+  beforeAll(async () => {
+    await mongoose.connect(DB_TEST_HOST);
+    server = app.listen(PORT);
+  });
 
-//   afterAll(async () => {
-//     await mongoose.connection.close();
-//     server.close();
-//   });
+  afterAll(async () => {
+    await mongoose.connection.close();
+    server.close();
+  });
 
-//   afterEach(async () => {
-//     await deleteAllUsers();
-//   });
+  afterEach(async () => {
+    await deleteAllUsers();
+  });
 
-//   test("test singin with correct data", async () => {
-//     const signinData = {
-//       email: "nataly@gmail.com",
-//       password: "123456",
-//     };
+  test("test singin with correct data", async () => {
+    const signinData = {
+      email: "nataly@gmail.com",
+      password: "123456",
+    };
 
-//     const { statusCode, body } = await request(app)
-//       .post("/api/users/login")
-//       .send(signinData);
+    const { statusCode, body } = await request(app)
+      .post("/api/users/login")
+      .send(signinData);
 
-//     expect(statusCode).toBe(200);
-//     expect(body.email).toBe(signinData.email);
-//     expect(body.subscription).toBe(signinData.subscription);
+    expect(statusCode).toBe(200);
+    expect(body.email).toBe(signinData.email);
+    expect(body.subscription).toBe(signinData.subscription);
 
-//     const user = await findUser({ email: signinData.email });
-//     expect(user).not.toBeNull();
-//     expect(user.email).toBe(signinData.email);
-//     expect(user.subscription).toBe(signinData.subscription);
-//   });
-// });
+    const user = await findUser({ email: signinData.email });
+    expect(user).not.toBeNull();
+    expect(user.email).toBe(signinData.email);
+    expect(user.subscription).toBe(signinData.subscription);
+  });
+});
