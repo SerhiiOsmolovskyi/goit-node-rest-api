@@ -9,9 +9,11 @@ export const saveUser = async (data) => {
   return User.create({ ...data, password: hashPassword });
 };
 
-export const processAvatar = async (oldPath, newPath) => {
-  const image = await jimp.read(oldPath);
-  await image.resize(250, 250).writeAsync(newPath);
-};
-
 export const updateUser = (filter, data) => User.findOneAndUpdate(filter, data);
+export const updateAvatarUser = (filter, { avatarURL }) =>
+  User.findOneAndUpdate(filter, { avatarURL });
+
+export const processAvatar = async (oldPath) => {
+  const image = await jimp.read(oldPath);
+  await image.resize(250, 250).writeAsync(oldPath);
+};

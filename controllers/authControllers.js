@@ -35,13 +35,17 @@ const signup = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
   const userId = req.user.id;
+  if (!req.file) {
+    throw HttpError(400, "No file uploaded");
+  }
   const { path: oldPath, filename } = req.file;
   const newPath = path.join(avatarsPath, filename);
+  await authServices.processAvatar(oldPath, filename);
   await fs.rename(oldPath, newPath);
-  await authServices.processAvatar(newPath, filename);
+
   const avatarURL = path.join("avatars", filename);
 
-  await authServices.updateUser({ _id: userId }, { avatarURL });
+  await authServices.updateAvatarUser({ _id: userId }, { avatarURL });
 
   res.status(200).json({ avatarURL });
 };

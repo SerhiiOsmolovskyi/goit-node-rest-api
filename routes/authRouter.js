@@ -33,6 +33,7 @@ authRouter.patch(
 
 authRouter.patch(
   "/avatars",
+  authenticate,
   upload.single("avatarURL"),
   authenticate,
   authControllers.updateAvatar
