@@ -26,14 +26,16 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-mongoose
-  .connect(DB_HOST)
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is running. Use our API on port: ${PORT}`);
-    });
-  })
-  .catch((error) => {
-    console.log(error.message);
-    process.exit(1);
-  });
+// mongoose
+//   .connect(DB_HOST)
+//   .then(() => {
+//     app.listen(PORT, () => {
+//       console.log(`Server is running. Use our API on port: ${PORT}`);
+//     });
+//   })
+//   .catch((error) => {
+//     console.log(error.message);
+//     process.exit(1);
+//   });
+
+export default app;

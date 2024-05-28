@@ -17,3 +17,5 @@ export const processAvatar = async (oldPath) => {
   const image = await jimp.read(oldPath);
   await image.resize(250, 250).writeAsync(oldPath);
 };
+
+export const deleteAllUsers = () => User.deleteMany();
