@@ -24,18 +24,18 @@ const signup = async (req, res) => {
     throw HttpError(409, "Email already exists");
   }
 
-  const verificationCode = nanoid();
+  const verificationToken = nanoid();
 
   const newUser = await authServices.saveUser({
     ...req.body,
     avatarURL,
-    verificationCode,
+    verificationToken,
   });
 
   const verifyEmail = {
     to: email,
     subject: "Verify email",
-    html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationCode}">Click to verify email</a>`,
+    html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">Click to verify email</a>`,
   };
 
   await sendEmail(verifyEmail);
@@ -50,18 +50,18 @@ const signup = async (req, res) => {
 };
 
 const verify = async (req, res) => {
-  const { verificationCode } = req.params;
-  const user = await authServices.findUser({ verificationCode });
+  const { verificationToken } = req.params;
+  const user = await authServices.findUser({ verificationToken });
   if (!user) {
     throw HttpError(404, "Email has not found or email was already verified");
   }
 
   await authServices.updateUser(
     { _id: user._id },
-    { verify: true, verificationCode: "" }
+    { verify: true, verificationToken: null }
   );
-  res.json({
-    message: "Email verified",
+  res.status(204).json({
+    message: "Verification successful",
   });
 };
 
@@ -79,7 +79,7 @@ const resendVerify = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: "Verify email",
-    html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${user.verificationCode}">Click to verify email</a>`,
+    html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${user.verificationToken}">Click to verify email</a>`,
   };
 
   await sendEmail(verifyEmail);

@@ -20,7 +20,7 @@ authRouter.post(
   authControllers.signup
 );
 
-authRouter.get("/verify/:verificatinCode", authControllers.verify);
+authRouter.get("/verify/:verificationToken", authControllers.verify);
 
 authRouter.post(
   "/verify",
