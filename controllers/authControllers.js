@@ -7,6 +7,8 @@ import { subscriptions } from "../constants/authConstants.js";
 import fs from "fs/promises";
 import path from "path";
 import gravatar from "gravatar";
+import { nanoid } from "nanoid";
+import sendEmail from "../helpers/sendEmail.js";
 
 const avatarsPath = path.resolve("public", "avatars");
 
@@ -22,7 +24,21 @@ const signup = async (req, res) => {
     throw HttpError(409, "Email already exists");
   }
 
-  const newUser = await authServices.saveUser({ ...req.body, avatarURL });
+  const verificationCode = nanoid();
+
+  const newUser = await authServices.saveUser({
+    ...req.body,
+    avatarURL,
+    verificationCode,
+  });
+
+  const verifyEmail = {
+    to: email,
+    subject: "Verify email",
+    html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationCode}">Click to verify email</a>`,
+  };
+
+  await sendEmail(verifyEmail);
 
   res.status(201).json({
     user: {
@@ -33,6 +49,45 @@ const signup = async (req, res) => {
   });
 };
 
+const verify = async (req, res) => {
+  const { verificationCode } = req.params;
+  const user = await authServices.findUser({ verificationCode });
+  if (!user) {
+    throw HttpError(404, "Email has not found or email was already verified");
+  }
+
+  await authServices.updateUser(
+    { _id: user._id },
+    { verify: true, verificationCode: "" }
+  );
+  res.json({
+    message: "Email verified",
+  });
+};
+
+const resendVerify = async (req, res) => {
+  const { email } = req.body;
+  const user = await authServices.findUser({ email });
+  if (!user) {
+    throw HttpError(404, "Email has not found");
+  }
+
+  if (user.verify) {
+    throw HttpError(400, "Email has already virified");
+  }
+
+  const verifyEmail = {
+    to: email,
+    subject: "Verify email",
+    html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${user.verificationCode}">Click to verify email</a>`,
+  };
+
+  await sendEmail(verifyEmail);
+
+  res.json({
+    message: "Verify email resent",
+  });
+};
 const updateAvatar = async (req, res) => {
   const userId = req.user.id;
   if (!req.file) {
@@ -55,6 +110,10 @@ const signin = async (req, res) => {
   const user = await authServices.findUser({ email });
   if (!user) {
     throw HttpError(401, "Email or password invalid");
+  }
+
+  if (!user.verify) {
+    throw HttpError(401, "Email is not verified");
   }
   const comparePassword = await compareHash(password, user.password);
   if (!comparePassword) {
@@ -121,6 +180,8 @@ const updateSubscription = async (req, res) => {
 
 export default {
   signup: ctrlWrapper(signup),
+  verify: ctrlWrapper(verify),
+  resendVerify: ctrlWrapper(resendVerify),
   signin: ctrlWrapper(signin),
   getCurrent: ctrlWrapper(getCurrent),
   signout: ctrlWrapper(signout),
