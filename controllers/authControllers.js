@@ -60,7 +60,7 @@ const verify = async (req, res) => {
     { _id: user._id },
     { verify: true, verificationToken: null }
   );
-  res.status(204).json({
+  res.status(200).json({
     message: "Verification successful",
   });
 };
